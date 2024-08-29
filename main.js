@@ -1,51 +1,71 @@
+
 function App() {
-    return (
-        <div style = {{height: "600px", width : "1000px",display : "flex" ,flexDirection : "row", justifyContent : "center",padding : "50px"}}>
-            <div style = {{height : "500px",width : "700px",backgroundColor : "skyblue",borderRadius : "5%"}}>
-                <Pic />
-                <Info />
-                <Data />
-            </div>
-        </div>
-    )
+  const [counters,setCounters] = React.useState([{id:1,number : 0}])
+
+  const updateCounter = (id,num,) => {
+    // console.log("id",id)
+    // if(num<=0){return}
+  
+    let idx = counters.findIndex(el => el.id === id)
+    // console.log("idx",idx)
+    const newCounters = [...counters]
+    if((newCounters[idx].number+num)<0){return}
+    newCounters[idx].number += num
+      // newCounters[idx].number += num
+    setCounters(newCounters)
+    
+    
+    // console.log(newCounters[idx].number)
+    // console.log(newCounters)
+  }
+
+  const removeArray = (id) => {
+    const newCounter = counters.filter(counters => counters.id !== id)
+    setCounters(newCounter)
+  }
+
+  const sumNum = counters.reduce((prev,curr)=> {
+    return prev += curr.number
+  },0)
+  // console.log("sumnum",sumNum)
+  return (
+    <div className = 'app'>
+      <h1 className="show-sum">Sum = {sumNum}</h1>
+      <button className="btn-add" onClick = {()=>{
+        setCounters([
+          ...counters,{
+          id: counters.length + 1,
+          number : 0}
+        ])
+      }}>Add Counter</button>
+      {/* <button onClick={()=>updateCounter(item.id,10)} className="btn btn-inc-ten">+10</button> */}
+      <hr />
+      {counters.map(el=>(
+        <Counter key = {el.id} item = {el} updateCounter={updateCounter} removeArray={removeArray} />
+      ))}
+    </div>
+  )
 }
 
-function Pic() {
-    return (
-        <div style = {{display : "flex" ,flexDirection : "row", justifyContent : "center",padding : "30px"}}>
-        <img src="https://images.unsplash.com/photo-1579463148228-138296ac3b98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" alt="Paris"
-        style = {{borderRadius : "50%"}}></img>
-        </div>
-    )
+
+
+function UpdateAll(props,num) {
+
 }
 
-function Info() {
-    return (
-        <div style = {{display : "flex" ,flexDirection : "column", textAlign : "center", padding : ""}}>
-            <h2>Julienne Moore</h2>
-            <h2 style = {{color : "grey"}}>juliane.moore@company.com</h2>
-        </div>
-    )
+function Counter(props) {
+  // console.log(props)
+  const {item,updateCounter,removeArray} = props
+  return (
+    <div className="counter">
+      <button onClick={()=>updateCounter(item.id,-1)} className="btn btn-dec">-</button>
+      <h3 className="number">{item.number}</h3>
+      <button onClick={()=>updateCounter(item.id,1)} className="btn btn-inc">+</button>
+      <button onClick={()=>updateCounter(item.id,-item.number)} className="btn btn-clr">C</button>
+      <button onClick={()=>removeArray(item.id)} className="btn btn-clr">X</button>
+    </div>
+  )
 }
 
-function Data() {
-    return (
-        <div style = {{display : "flex" , flexDirection : "row",justifyContent : "space-around", padding : "20px 0"}}>
-            <div style = {{display : "flex" ,flexDirection : "column", textAlign : "center"}}>
-                <h3 style = {{fontSize : "25px"}}>25</h3>
-                <h3 style = {{color : "grey" , fontSize : "20px"}}>Posts</h3>
-            </div>
-            <div style = {{display : "flex" ,flexDirection : "column", textAlign : "center"}}>
-                <h3 style = {{fontSize : "25px"}}>350</h3>
-                <h3 style = {{color : "grey" , fontSize : "20px"}}>Following</h3>
-            </div>
-            <div style = {{display : "flex" ,flexDirection : "column", textAlign : "center"}}>
-                <h3 style = {{fontSize : "25px"}}>1.5k</h3>
-                <h3 style = {{color : "grey" , fontSize : "20px"}}>Followers</h3>
-            </div>
-        </div>
-    )
-}
-
-ReactDOM.createRoot(document.querySelector('#root'))
-.render(<App / >)
+ReactDOM.createRoot(document.querySelector("#root"))
+  .render(<App />)
